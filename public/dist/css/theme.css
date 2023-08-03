@@ -1,0 +1,19 @@
+
+/*!
+
+ * Copyright 2023-2024 The theme Authors
+ */
+
+.demo-img{
+    padding-top: 10px;
+    width: 145px;
+    border-radius: 11px;
+}
+
+.loader{
+    display: none;
+}
+
+label:not(.form-check-label):not(.custom-file-label) {
+    font-weight: 600;
+}
