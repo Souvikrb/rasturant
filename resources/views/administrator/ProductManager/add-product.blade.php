@@ -18,7 +18,7 @@
     {{ implode('', $errors->all('<div>:message</div>')) }}
 @endif -->
                         </div>
-                        <form  method="post" action="{{url('create-product')}}" enctype="multipart/form-data">
+                        <form  method="post" action="{{route('products/store')}}" enctype="multipart/form-data">
                             @csrf
                             <div class="card-body">
                                 <div class="row">
@@ -28,7 +28,6 @@
                                                 <div class="form-group">
                                                     <label>Product Name</label>
                                                     <input type="text"
-                                                        onkeypress="return /^[a-zA-Z_ ]/i.test(event.key)"
                                                         class="form-control" placeholder="Product Name" required
                                                         name="product" id="product" value="{{old('product')}}">
                                                     @error('product')

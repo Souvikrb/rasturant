@@ -31,20 +31,22 @@ class ProductController extends Controller
         ]);
 
         //$path = $request->file('prodImg')->store('public/uploads');
-
-        $imageName = str_replace(' ', '', $request->product) . '.' . $request->prodImg->extension();
-        $path = $request->prodImg->storeAs('products', $imageName);
+        $prvid = product::latest()->first()->id;
+        $prvid += 1;
+        $imageName = 'products-'.$prvid . '.' . $request->prodImg->extension();
+        $path = $request->prodImg->storeAs('public/products', $imageName);
 
 
         $data = new product();
         $data['product']     = $request->product;
         $data['rgPrice']     = $request->rgPrice;
         $data['slPrice']     = $request->slPrice;
-        $data['prodImg']     = $path;
+        $data['prodImg']     = $imageName ;
         $data['type']        = $request->type;
+        $data['tags']        = $request->tags;
         $data['status']      = $request->status;
         $data->save();
-        return redirect('/add-product');
+        return redirect('/products');
     }
 
     public function destroy($id)

@@ -42,7 +42,6 @@
                         <div class="row clearfix">
                        
                                 <div class="menu-col col-lg-6 col-md-12 col-sm-12">
-                                    <div class="inner ">
                                         <!--Block-->
                                         <div class="dish-block">
                                             <div class="inner-box">

@@ -47,8 +47,8 @@ Route::get('purchase',[StockController::class,'create']);
 
 //All product route
 Route::get('products',[ProductController::class,'index'])->name("products");
-Route::get('add-product',[ProductController::class,'create']);
-Route::post('create-product',[ProductController::class,'store']);
+Route::get('products/add',[ProductController::class,'create'])->name('products/add');
+Route::post('products/store',[ProductController::class,'store'])->name('products/store');
 
 
 Route::prefix('product')->group(function () {

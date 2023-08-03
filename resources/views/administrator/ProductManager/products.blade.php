@@ -33,10 +33,8 @@
                                 @foreach($data as $d)
                                 <?php $i++; ?>
                                 <tr>
-                                    <td style="widtd: 10px">{{$i}}
-                                    
-                                </td>
-                                    <td>{{$d->product}} <br> <small class="text-danger">{{$d->tags}}</small></td>
+                                    <td style="widtd: 10px">{{$i}}</td>
+                                    <td><img class="badge-image" src="{{asset('storage/products/'.$d->prodImg)}}">{{$d->product}} <br> <small class="text-danger">{{$d->tags}}</small></td>
                                     <td>{{($d->rgPrice == '')?'----':$d->rgPrice}}</td>
                                     <td>{{$d->type}}</td>
                                     <td>{{$d->status}}</td>
