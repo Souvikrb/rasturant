@@ -46,8 +46,14 @@
         </div>
         <div class="footer-bottom">
             <div class="auto-container">
-                <div class="copyright">&copy; 2023. All Rights Reserved   |    Crafted by <a href="#" target="blank">Tandoor Mahal</a></div>
+                <div class="copyright">&copy; <?=date('Y')?>. All Rights Reserved   |    Crafted by <a href="#" target="blank">Tandoor Mahal</a></div>
             </div>
+        </div>
+        <div class="foot-call">
+            <div class="col border-right"><a href="https://api.whatsapp.com/send?phone=917980667658&amp;text=Hi%20I%20would%20like%20to%20know%20more%20about%20the%20school%20and%20the%20admission%20procedure." target="_blank"><img src="https://img.icons8.com/color/30/000000/whatsapp.png" alt="Whatsapp Us - axisclinics"></a></div>
+            <div class="col border-right" style="padding-top: 5px;"><a href="javascript:void(0)" style="color:white" class="filter"><i style="font-size: 24px;" class="fa fa-filter-list"></i></a></div>
+            <div class="col border-right" style="padding-top: 5px;"><a href="{{route('/cart')}}" style="color:white"><i style="font-size: 24px;" class="fa fa-shopping-cart"></i></a></div>
+            <div class="col" style="padding-top: 5px;"><a href="{{route('/administrator')}}" style="color:white"><i style="font-size: 24px;" class="fa fa-user"></i></a></div>
         </div>
     </footer>
 

@@ -1,12 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdministratorController;
+
+use App\Http\Controllers\frontend\FrontendController;
+use App\Http\Controllers\frontend\CartController;
+use App\Http\Controllers\frontend\UserController;
+
+use App\Http\Controllers\admin\AdministratorController;
 use App\Http\Controllers\Transaction\SaleController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\QuizController;
-use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\admin\OrderController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,12 +25,22 @@ use App\Http\Controllers\ProductController;
 
 
 Route::get('/',           [FrontendController::class,'index']);
-Route::get('/cart',       [FrontendController::class,'cart']);
-Route::post('/register-user',[FrontendController::class,'registerUser']);
-Route::get('/create-user',[FrontendController::class,'createUser']);
+
+// User Routes
+Route::get('/register',  [UserController::class,'createUser'])->name('/register');
+Route::post('/register/user', [UserController::class,'registerUser'])->name('/register/user');
+Route::get('/login',    [UserController::class,'login'])->name('/login');
+Route::post('/user/login', [UserController::class,'loginUser'])->name('/user/login');
+
+// cart routes
+Route::get('/cart',          [CartController::class,'index'])->name('/cart');
+Route::post('/cart/add',     [CartController::class,'addtoCart'])->name('/cart/add');
+Route::get('/order/submit',  [CartController::class,'orderSubmit'])->name('/order/submit');
 /* Administrator route list ------------------------------------------------------*/
 
-Route::get('administrator',[AdministratorController::class,'index']);
+Route::get('administrator',[AdministratorController::class,'index'])->name('/administrator');
+Route::get('admin/login',[AdministratorController::class,'login'])->name('/admin/login');
+Route::post('admin/login/save',[AdministratorController::class,'login_save'])->name('/admin/login/save');
 
 //All Sale route
 Route::get('sale-upload-excel',[SaleController::class,'addByExcel']);
@@ -60,3 +75,6 @@ Route::prefix('product')->group(function () {
 Route::get('quiz',[QuizController::class,'create']);
 /* -------------------------------------------------------------------------------*/
 
+//All Order route
+Route::get('admin/order',[OrderController::class,'index'])->name('/admin/order');
+/* -------------------------------------------------------------------------------*/

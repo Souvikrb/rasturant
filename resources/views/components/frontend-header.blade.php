@@ -5,6 +5,7 @@
  <meta charset="">
  <meta name="viewport" content="width=device-width, initial-scale=1">
 <title> Tandoor House</title>
+<meta name="csrf-token" content="{{ csrf_token() }}" />
 <!-- Stylesheets -->
 <link href="{{url('web-resources/css/bootstrap.css')}}" rel="stylesheet" async>
 <link href="{{url('web-resources/css/style.css')}}" rel="stylesheet" async>
@@ -17,6 +18,13 @@
 <link href="{{url('web-resources/css/mystyle.css')}}" rel="stylesheet" async>
 
 <script src="{{url('web-resources/js/jquery.js')}}" ></script>
+<script type="text/javascript">
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+</script>
 </head>
 
 <body>
@@ -80,19 +88,29 @@
                          
                         <form method="get" id="search_form" action="<?=URL::to('/');?>/menu">
                         <div class="form-group" style="text-align: left;">
-                            <input type="text" class="search-field search-field-mob" autocomplete="off" list="menulist" name="dish" value="" placeholder="Find anythings">
-                           
-                            <button type="submit" class="search-btn search-mob-btn">
+                            
+                            <a href="{{route('/cart')}}" class="cart-icon search-mob-btn mr-3">
                                 <span class="btn-wrap">
-                                    <span class="text-one"><i class="fa fa-search"></i></span>
+                                    <span class="text-one">
+                                        <i class="fa fa-shopping-cart"></i>
+                                        <span class="badge badge-danger cart-badge">1</span>
+                                    </span>
                                 </span>
-                            </button>
+                            </a>
+                            <a href="{{route('/cart')}}" class="cart-icon search-mob-btn mr-3">
+                                <span class="btn-wrap">
+                                    <span class="text-one">
+                                        <i class="fa fa-bell"></i>
+                                        <span class="badge badge-danger cart-badge">1</span>
+                                    </span>
+                                </span>
+                            </a>
                         </div>
                     </form>
                         </div>
 
                         <!-- Hidden Nav Toggler -->
-                        <div class="nav-toggler">
+                        <!-- <div class="nav-toggler">
                             <button class="hidden-bar-opener">
                                 <span class="hamburger">
                                     <span class="top-bun"></span>
@@ -100,7 +118,7 @@
                                     <span class="bottom-bun"></span>
                                 </span>
                             </button>
-                        </div>
+                        </div> -->
 
                     </div>
 

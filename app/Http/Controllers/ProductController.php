@@ -31,7 +31,11 @@ class ProductController extends Controller
         ]);
 
         //$path = $request->file('prodImg')->store('public/uploads');
-        $prvid = product::latest()->first()->id;
+        if (product::exists()) {
+            $prvid = product::latest()->first()->id;
+        } else {
+            $prvid = 0;
+        }
         $prvid += 1;
         $imageName = 'products-'.$prvid . '.' . $request->prodImg->extension();
         $path = $request->prodImg->storeAs('public/products', $imageName);

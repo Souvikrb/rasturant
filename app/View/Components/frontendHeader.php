@@ -14,10 +14,7 @@ class frontendHeader extends Component
      */
     public function __construct()
     {
-        $tempId = 'user'.rand(10,1000000);
-        if(!isset($_COOKIE['tempId'])) {
-            setcookie('tempId', $tempId, time() + (86400 * 30), "/");
-        } 
+        
         
     }
 

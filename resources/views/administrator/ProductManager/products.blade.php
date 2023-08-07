@@ -1,7 +1,7 @@
 <x-admin-header/>
   
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
+  <div class="content-wrapper ">
 
 
     <!-- Main content -->
@@ -15,12 +15,13 @@
                 
               </div>
               <!-- /.card-header -->
-              <div class="card-body table-responsive">
-                <table class="table table-bordered" >
+              <div class="card-body table-responsive ">
+                <table class="table " >
                   <thead>
                         <tr>
                             <th style="width: 10px">#</th>
-                            <th>Product</th>
+                            <th style="width: 10px">Product</th>
+                            <th></th>
                             <th>Price</th>
                             <th>Type</th>
                             <th>Status</th>
@@ -33,9 +34,11 @@
                                 @foreach($data as $d)
                                 <?php $i++; ?>
                                 <tr>
-                                    <td style="widtd: 10px">{{$i}}</td>
-                                    <td><img class="badge-image" src="{{asset('storage/products/'.$d->prodImg)}}">{{$d->product}} <br> <small class="text-danger">{{$d->tags}}</small></td>
+                                    <td >{{$i}}</td>
+                                    <td ><img class="badge-image" src="{{asset('storage/products/'.$d->prodImg)}}"></td>
+                                    <td >{{$d->product}} <br> <small class="text-danger">{{$d->tags}}</small></td>
                                     <td>{{($d->rgPrice == '')?'----':$d->rgPrice}}</td>
+                                    
                                     <td>{{$d->type}}</td>
                                     <td>{{$d->status}}</td>
                                     <td><div class="btn-group btn-group-sm"><button  data-sId="{{$d->id}}"  class="btn btn-primary editicon"><i class="fas fa-pen"></i></button><a href="{{url('delete-product/'.$d->id)}}" data-sId="{{$d->id}}"  class="btn btn-danger delicon"><i class="fas fa-trash"></i></a></div></td>
