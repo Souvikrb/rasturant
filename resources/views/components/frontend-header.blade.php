@@ -47,14 +47,28 @@
                     </div>
                     <div class="top-right clearfix">
                         <ul class="top-info clearfix">
-                           
-                                                        <li>
+                            <li>
                                 <a href="tel:+917980667658"><i class="con far fa-phone"></i>  +91 7980667658 </a>
                             </li>
-                                                                                    <li>
-                                <a href="mailto:enquiry@tandoormahal.in"><i class="icon far fa-envelope"></i> enquiry@tandoormahal.in </a>
+                            @if(Session::has('userId'))
+                                <li>
+                                <a href="{{route('/logout')}}" class="badge-danger badge header-padding" >Log out </a>
+                                
                             </li>
-                                                    </ul>
+                            <li>
+
+                                <a href="{{route('/user/order')}}" class="user-icon"><i class="fa fa-user"></i></a>
+                            </li>
+                            @else
+                            <li>
+                                <a href="{{route('/login')}}" class="badge-danger badge header-padding" >Log in </a>
+                            </li>
+                            <li>
+
+                                <a href="{{route('/register')}}" class="badge-danger badge header-padding" >Create a new account</a>
+                            </li>
+                            @endif
+                         </ul>
                     </div>
                 </div>
             </div>

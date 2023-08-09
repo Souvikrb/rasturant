@@ -38,7 +38,7 @@ class UserController extends Controller
         $data = new customer();
         $data['username']      = $request->username;
         $data['phonenumber']   = $request->phonenumber;
-        $data['password']      = $this->decrypt($request->password);
+        $data['password']      = $this->encrypt($request->password);
         $data['email']         = $request->email;
         $data['deliveryArea']  = $request->deliveryArea;
         $data['address']       = $request->address;
@@ -46,26 +46,37 @@ class UserController extends Controller
 
         /* Data transfer cart to order table ==============*/
         $customer_id = $data->id;
-        Session::put('userId', $data->id);
+        Session::put(array('userId'=>$data->id,'username'=>$request->username));
+        setcookie('tempId', $this->encrypt($customer_id), time() + (60 * 30), "/");
         $userId = $this->getUserId();
-        $cartData = cart::where('userId',$userId)->get();
-       
-        foreach($cartData as $c){
-            // $orderObj[] = array('userid'=>$c->userid,'product'=>$c->product,'count'=>$c->count,'mode'=>'COD','status'=>'Processing');
-            $orderObj = new order();
-            $orderObj['userid']      = $customer_id;
-            $orderObj['product']     = $c->product;
-            $orderObj['count']       = $c->count;
-            $orderObj['mode']        = 'COD';
-            $orderObj['status']      = 'Processing';
-            $orderObj->save();
-            
+        $placeOrder = 0;
+        if(isset($_COOKIE['placeOrder'])){
+            $placeOrder = $_COOKIE['placeOrder'];
         }
-        //DB::table('orders')->insert($orderObj);
+        
+        if($placeOrder == '1'){
+            $cartData = cart::where('userId',$userId)->get();
+            $bundle = $userId.'-'.rand(10,100);
+            foreach($cartData as $c){
+                // $orderObj[] = array('userid'=>$c->userid,'product'=>$c->product,'count'=>$c->count,'mode'=>'COD','status'=>'Processing');
+                $orderObj = new order();
+                $orderObj['userid']      = $customer_id;
+                $orderObj['product']     = $c->product;
+                $orderObj['count']       = $c->count;
+                $orderObj['bundle']      = $bundle;
+                $orderObj['mode']        = 'COD';
+                $orderObj['status']      = 'Processing';
+                $orderObj->save();
+                
+            }
+            //DB::table('orders')->insert($orderObj);
 
-        /* Delete cart data ==============*/
-        cart::where('userid',$userId)->delete();
-        return redirect('/administrator');
+            /* Delete cart data ==============*/
+            cart::where('userid',$userId)->delete();
+            setcookie('placeOrder','', time() + (60 * 30), "/");
+        }
+        
+        return redirect('/user/order');
     }
 
     public function loginUser(Request $request)
@@ -77,10 +88,45 @@ class UserController extends Controller
             'password'     => 'required',
         ]);
 
-        $data = customer::where(array('phonenumber'=>$request->phonenumber,'password'=>$request->password))->get();
-        if($data->count() != 0){
-            Session::put('userId', $data->id);
-            return redirect('/administrator');
+        $data = customer::where(array('phonenumber'=>$request->phonenumber))->first();
+        if($data){
+            if($request->password == $this->decrypt($data->Password)){
+                Session::put(array('userId'=>$data->id,'username'=>$data->username));
+                setcookie('tempId', $this->encrypt($data->id), time() + (60 * 30), "/");
+                /* Data transfer cart to order table ==============*/
+                $customer_id = $data->id;
+                $userId = $this->getUserId();
+                $placeOrder = 0;
+                if(isset($_COOKIE['placeOrder'])){
+                    $placeOrder = $_COOKIE['placeOrder'];
+                }
+                if($placeOrder == '1'){
+                    $cartData = cart::where('userId',$userId)->get();
+                    $bundle = $userId.'-'.rand(10,100);
+                    foreach($cartData as $c){
+                        // $orderObj[] = array('userid'=>$c->userid,'product'=>$c->product,'count'=>$c->count,'mode'=>'COD','status'=>'Processing');
+                        $orderObj = new order();
+                        $orderObj['userid']      = $customer_id;
+                        $orderObj['product']     = $c->product;
+                        $orderObj['count']       = $c->count;
+                        $orderObj['bundle']      = $bundle;
+                        $orderObj['mode']        = 'COD';
+                        $orderObj['status']      = 'Processing';
+                        $orderObj->save();
+                        
+                    }
+                    //DB::table('orders')->insert($orderObj);
+
+                    /* Delete cart data ==============*/
+                    cart::where('userid',$userId)->delete();
+                    setcookie('placeOrder','', time() + (60 * 30), "/");
+                    return redirect('/user/order');
+                }
+                return redirect('/');
+            }else{
+                return redirect('/login')->withErrors(array('loginerror'=>'Your credentials is incorrect'));
+            }
+            
         }else{
             return redirect('/login')->withErrors(array('loginerror'=>'Your credentials is incorrect'));
         }
@@ -107,4 +153,24 @@ class UserController extends Controller
         // cart::where('userid',$userId)->delete();
         // return redirect('/administrator');
     }
+
+    public function logout(){
+        Session::forget('userId');
+        Session::forget('username');
+        setcookie('placeOrder','', time() + (60 * 30), "/");
+        setcookie('tempId','', time() + (60 * 30), "/");
+        return redirect('/');
+    }
+
+    public function order(){
+        $orderdata = order::select("orders.id","orders.mode","orders.count as qunt","orders.status","orders.created_at","p.product as product_name","p.slPrice","p.prodImg","p.type","c.username","c.phonenumber","c.altPhonenumber","c.deliveryArea","c.address")->leftJoin("products as p","orders.product","=","p.id")->leftJoin("customers as c","orders.userid","=","c.id")->get();
+ 
+        return view('frontend/dashboard/order')->with(array('data'=>$orderdata));
+    }
+
+
+
+
+
+
 }

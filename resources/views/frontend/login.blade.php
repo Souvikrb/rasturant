@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="form-group ">
                                     <div class="field-inner">
-                                        <input type="text" maxlength="15" minlength="4" class="cusField" name="password"
+                                        <input type="password" maxlength="15" minlength="4" class="cusField" name="password"
                                             placeholder="Password*" required="" value="{{old('password')}}">
                                             @error('password')
                                                 <small class="error">{{ $message }}</small>

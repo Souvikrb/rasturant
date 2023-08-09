@@ -3,7 +3,9 @@
 namespace App\View\Components;
 
 use Illuminate\View\Component;
-
+use Session;
+use App\Models\Menu;
+use App\Models\Submenu;
 class AdminHeader extends Component
 {
     /**
@@ -23,6 +25,13 @@ class AdminHeader extends Component
      */
     public function render()
     {
-        return view('components.admin-header');
+        if(Session::has('adminId')){
+            $role ='1';
+        }else{
+            $role ='2';
+        }
+        $menu    = Menu::where(array('status'=>'1','role'=>$role))->get();
+        $submenu = Submenu::where(array('status'=>'1','role'=>$role))->get();
+        return view('components.admin-header')->with(array('menu'=>$menu,'submenu'=>$submenu));
     }
 }

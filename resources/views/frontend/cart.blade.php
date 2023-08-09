@@ -24,8 +24,14 @@
                     <div class="tabs-box menu-tabs cart-details pattern1">
                         <div class="tabs-content">
                             <div class="row clearfix">
-                                
+                                    @php
+                                        $total = 0;
+                                        $delivery = 0;
+                                    @endphp
                                     @foreach($cartdata as $data)
+                                    @php
+                                        $total += $data->slPrice * $data->count;
+                                    @endphp
                                     <div class="menu-col col-lg-12 col-md-12 col-sm-12">
                                         <div class="inner ">
                                             <!--Block-->
@@ -75,15 +81,15 @@
                                             <h6>Item Total</h6>
                                         </div>
                                         <div class="col-md-3 col-3 text-right">
-                                            <h6>₹200</h6>
+                                            <h6>₹{{$total}}</h6>
                                         </div>
                                     </div>
                                     <div class="row clearfix pt-1 ">
                                         <div class="col-md-8 col-8 ">
-                                            <h6>Delivery Fee | 1.0 kms</h6>
+                                            <h6>Delivery Fee <span class="badge badge-danger">Limited time offer</span></h6>
                                         </div>
                                         <div class="col-md-3 col-3 text-right">
-                                            <h6>₹10</h6>
+                                            <h6>Free</h6>
                                         </div>
                                     </div>
                                     <hr>
@@ -92,7 +98,7 @@
                                             <h6>Grand Total</h6>
                                         </div>
                                         <div class="col-md-3 col-3 text-right">
-                                            <h6>₹210</h6>
+                                            <h6>₹{{$total + $delivery}}</h6>
                                         </div>
                                     </div>
                                     <hr>

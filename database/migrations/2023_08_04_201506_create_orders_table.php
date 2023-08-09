@@ -19,8 +19,9 @@ class CreateOrdersTable extends Migration
             $table->integer('product');
             $table->integer('count');
             $table->string('mode');
-            $table->string('review');
-            $table->string('rating');
+            $table->string('bundle');
+            $table->string('review')->nullable();
+            $table->string('rating')->nullable();
             $table->string('status');
             $table->timestamps();
         });

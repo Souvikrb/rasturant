@@ -15,6 +15,7 @@ class AdministratorController extends Controller
      */
     public function index()
     {
+       
         return view('administrator/dashboard');
     }
 
@@ -35,7 +36,6 @@ class AdministratorController extends Controller
             'phone'    => 'required|numeric',
             'password' => 'required'
         ]);
-
         $data = user::where('phone',$request->phone)->first();
         if(!empty($data)){
             if($request->password == $this->decrypt($data->password)){

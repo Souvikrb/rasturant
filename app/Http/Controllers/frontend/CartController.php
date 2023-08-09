@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\cart;
 use Session;
+use App\Models\order;
 class CartController extends Controller
 {
 
@@ -51,9 +52,24 @@ class CartController extends Controller
         $userId = Session::get('userId');
         if($userId == ''){
             setcookie('placeOrder', '1', time() + (60 * 30), "/");
-            return redirect('/user/register');
+            return redirect('/register');
         }else{
-            echo '1';die;
+            
+                $cartData = cart::where('userId',$userId)->get();
+                $bundle = $userId.'-'.rand(10,100);
+                foreach($cartData as $c){
+                    $orderObj = new order();
+                    $orderObj['userid']      = $userId;
+                    $orderObj['product']     = $c->product;
+                    $orderObj['count']       = $c->count;
+                    $orderObj['bundle']      = $bundle;
+                    $orderObj['mode']        = 'COD';
+                    $orderObj['status']      = 'Processing';
+                    $orderObj->save();
+                }
+                cart::where('userid',$userId)->delete();
+                setcookie('placeOrder','', time() + (60 * 30), "/");
+                return redirect('/user/order');
         }
     }
 }

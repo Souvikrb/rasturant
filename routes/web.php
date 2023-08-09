@@ -12,6 +12,9 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\admin\OrderController;
+
+use App\Http\Middleware\AdminAuthentication;
+use App\Http\Middleware\UserAuthentication;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,16 +34,43 @@ Route::get('/register',  [UserController::class,'createUser'])->name('/register'
 Route::post('/register/user', [UserController::class,'registerUser'])->name('/register/user');
 Route::get('/login',    [UserController::class,'login'])->name('/login');
 Route::post('/user/login', [UserController::class,'loginUser'])->name('/user/login');
+Route::get('/logout', [UserController::class,'logout'])->name('/logout');
 
 // cart routes
 Route::get('/cart',          [CartController::class,'index'])->name('/cart');
 Route::post('/cart/add',     [CartController::class,'addtoCart'])->name('/cart/add');
 Route::get('/order/submit',  [CartController::class,'orderSubmit'])->name('/order/submit');
-/* Administrator route list ------------------------------------------------------*/
 
-Route::get('administrator',[AdministratorController::class,'index'])->name('/administrator');
+/* Administrator route list =======================================================*/
+Route::middleware([UserAuthentication::class])->group(function () {
+    Route::get('/user/order',[UserController::class,'order'])->name('/user/order');
+});
+
+/* ================================================================================*/
+
+
+/* Administrator route list ------------------------------------------------------*/
 Route::get('admin/login',[AdministratorController::class,'login'])->name('/admin/login');
 Route::post('admin/login/save',[AdministratorController::class,'login_save'])->name('/admin/login/save');
+
+Route::middleware([AdminAuthentication::class])->group(function () {
+    Route::get('administrator',[AdministratorController::class,'index'])->name('/administrator');
+
+    //All Order route
+    Route::get('admin/order',[OrderController::class,'index'])->name('/admin/order');
+    Route::post('admin/order/updateOrderStatus',[OrderController::class,'updateOrderStatus'])->name('/admin/order/updateOrderStatus');
+    /* -------------------------------------------------------------------------------*/
+
+    //All product route
+    Route::get('products',[ProductController::class,'index'])->name("products");
+    Route::get('products/add',[ProductController::class,'create'])->name('products/add');
+    Route::post('products/store',[ProductController::class,'store'])->name('products/store');
+    Route::prefix('product')->group(function () {
+        Route::get('delete/{id}',[ProductController::class,'destroy'])->name("deleteProduct");
+    });
+    /* -------------------------------------------------------------------------------*/
+});
+
 
 //All Sale route
 Route::get('sale-upload-excel',[SaleController::class,'addByExcel']);
@@ -58,23 +88,10 @@ Route::get('sales-remove-editdata',[SaleController::class,'destroy']);
 
 //All Stock route
 Route::get('purchase',[StockController::class,'create']);
-/* -------------------------------------------------------------------------------*/
 
-//All product route
-Route::get('products',[ProductController::class,'index'])->name("products");
-Route::get('products/add',[ProductController::class,'create'])->name('products/add');
-Route::post('products/store',[ProductController::class,'store'])->name('products/store');
-
-
-Route::prefix('product')->group(function () {
-    Route::get('delete/{id}',[ProductController::class,'destroy'])->name("deleteProduct");
-});
-/* -------------------------------------------------------------------------------*/
 
 //All Quiz route
 Route::get('quiz',[QuizController::class,'create']);
 /* -------------------------------------------------------------------------------*/
 
-//All Order route
-Route::get('admin/order',[OrderController::class,'index'])->name('/admin/order');
-/* -------------------------------------------------------------------------------*/
+

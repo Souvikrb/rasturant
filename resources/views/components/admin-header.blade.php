@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Administrator</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{url('plugins/fontawesome-free/css/all.min.css')}}">
@@ -27,6 +28,14 @@
     <link rel="stylesheet" href="{{url('plugins/toastr/toastr.min.css')}}">
 
     <script src="{{url('plugins/jquery/jquery.min.js')}}"></script>
+    <script>
+        var baseurl = '{{url("/")}}';
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
     <style>
     small.error {
         color: #d30000;
@@ -163,9 +172,14 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="index3.html" class="brand-link">
-                <img src="{{url('dist/img/AdminLTELogo.png')}}" alt="AdminLTE Logo"
-                    class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">Administrator</span>
+                <span class="brand-text font-weight-light">
+                    @if(Session::has('username'))
+                        {{Session::get('username')}} 
+                    @else
+                        Administrator
+                    @endif
+                    
+                </span>
             </a>
 
             <!-- Sidebar -->
@@ -186,47 +200,48 @@
                                 </p>
                             </a>
                         </li>
+                        @foreach($menu as $m)
+                            @if($m->link != '')
+                                <li class="nav-item">
+                                    <a href="{{route($m->link)}}" class="nav-link">
+                                        <?=$m->icon?>
+                                        <p>
+                                            {{$m->label}}
+                                            <span class="badge badge-info right">2</span>
+                                        </p>
+                                    </a>
+                                </li>
+                            @else
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        {{$m->icon}}
+                                        <p>
+                                            {{$m->label}}
+                                            <i class="fas fa-angle-left right"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a href="{{url('')}}/products" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Products</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{{route('products/add')}}" class="nav-link">
+                                                <i class="far fa-circle nav-icon"></i>
+                                                <p>Add Product</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endif
+                            
+                            
+                        @endforeach
+                      
+                        
                         <!-- <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-copy"></i>
-                                <p>
-                                    Inventory Purchase
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{url('')}}/purchase" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Add Purchase</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li> -->
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-copy"></i>
-                                <p>
-                                    Product
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{url('')}}/products" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Products</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{route('products/add')}}" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Add Product</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-copy"></i>
                                 <p>
@@ -276,7 +291,7 @@
                                     <span class="badge badge-info right">2</span>
                                 </p>
                             </a>
-                        </li>
+                        </li> -->
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
