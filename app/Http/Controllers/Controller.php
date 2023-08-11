@@ -21,11 +21,12 @@ class Controller extends BaseController
     public function getUserId(){
         if(Session::has('userId')){
             $tempId = $this->encrypt(Session::get('userId'));
-        }else{
-           $tempId = $this->encrypt('user'.rand(10,1000000));
+        }else if(isset($_COOKIE['tempId'])) {
+            $tempId = $_COOKIE['tempId'];
         }
         
         if(!isset($_COOKIE['tempId'])) {
+            $tempId = $this->encrypt('user'.rand(10,1000000));
             setcookie('tempId', $tempId, time() + (60 * 30), "/");
             return $this->decrypt($tempId);
         }else{

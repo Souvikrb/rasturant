@@ -14,11 +14,12 @@
                     <div class="card card-primary">
                         <div class="card-header">
                             <h3 class="card-title">Add Product</h3>
+                            <a href="{{route('/admin/products')}}" class="btn bg-warning text-light float-right btn-sm"><b>View</b></a>
                             <!-- @if($errors->any())
     {{ implode('', $errors->all('<div>:message</div>')) }}
 @endif -->
                         </div>
-                        <form  method="post" action="{{route('products/store')}}" enctype="multipart/form-data">
+                        <form  method="post" action="{{route('/admin/products/store')}}" enctype="multipart/form-data">
                             @csrf
                             <div class="card-body">
                                 <div class="row">
@@ -35,7 +36,7 @@
                                                     @enderror
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>Regular Price</label>
                                                     <input type="text" 
@@ -48,7 +49,7 @@
                                                         @enderror
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>Sale Price</label>
                                                     <input type="text" 
@@ -56,6 +57,18 @@
                                                         maxlength="6" class="form-control number"
                                                         placeholder="Sale Price" required value="{{old('slPrice')}}" name="slPrice" id="slPrice">
                                                         @error('slPrice')
+                                                            <small class="error">{{ $message }}</small>
+                                                        @enderror
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label>Half Price</label>
+                                                    <input type="text" 
+                                                        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                                        maxlength="6" class="form-control number"
+                                                        placeholder="Half Price" required value="{{old('slPrice')}}" name="hPrice" id="hPrice">
+                                                        @error('hPrice')
                                                             <small class="error">{{ $message }}</small>
                                                         @enderror
                                                 </div>
@@ -83,6 +96,19 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
+                                            <label>Category</label>
+                                            <select class="form-control " required name="category" id="category">
+                                                <option value="">--select--</option>
+                                                <option value="Single">Single</option>
+                                                <option value="Thali">Thali</option>
+                                            </select>
+                                            @error('category')
+                                                <small class="error">{{ $message }}</small>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
                                             <label>Type</label>
                                             <select class="form-control " required name="type" id="type">
                                                 <option value="">--select--</option>
@@ -94,7 +120,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Tags</label>
                                             <input type="text" class="form-control " placeholder="Tags" 
@@ -104,7 +130,19 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-md-5">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>Customize</label>
+                                            <select class="form-control " name="customize" id="customize">
+                                                <option value="No">No</option>
+                                                <option value="Yes">Yes</option>
+                                            </select>
+                                            @error('customize')
+                                                <small class="error">{{ $message }}</small>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
                                         <div class="form-group">
                                             <label>Status</label>
                                             <select class="form-control " name="status" id="status">
@@ -117,10 +155,19 @@
                                         </div>
                                     </div>
                                 </div>
-
-
-
-                            </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Description</label>
+                                                <textarea class="form-control" name="description" placeholder="Enter your item description"></textarea>
+                                                @error('description')
+                                                    <small class="error">{{ $message }}</small>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
+                                   
+                                </div>
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Save <span class="loader"></span></button>
                             </div>

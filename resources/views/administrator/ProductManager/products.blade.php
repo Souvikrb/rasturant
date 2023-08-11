@@ -12,7 +12,7 @@
             <div class="card card-primary">
               <div class="card-header">
                 <h3 class="card-title">All Products</h3>
-                
+                <a href="{{route('/admin/products/add')}}" class="btn bg-warning text-light float-right btn-sm"><b>Add New</b></a>
               </div>
               <!-- /.card-header -->
               <div class="card-body table-responsive ">

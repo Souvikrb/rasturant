@@ -19,7 +19,7 @@ class CreateSalesTable extends Migration
             $table->integer('quantity');
             $table->string('discount');
             $table->decimal('total',5,2);
-            $table->text('review');
+            $table->text('review')->nullable();
             $table->date('entry');
             $table->timestamps();
         });

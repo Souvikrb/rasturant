@@ -73,14 +73,14 @@
                                                 @if($d->status != 'Cancel')
                                                 <span class="time"><i class="fas fa-clock"></i> 15 mins ago</span>
                                                 @endif
-                                                <h3 class="timeline-header"><a href="#" class="text-danger">{{$d->product_name}}</a> is {{$d->status}}</h3>
+                                                <h3 class="timeline-header"><a href="#" class="text-danger">{{$d->product_name}}</a> is  {{$d->status}}</h3>
 
                                                 <div class="timeline-body">
                                                     <b>Price :</b> {{$d->slPrice * $d->qunt}}<br>
                                                     <b>Type :</b> {{$d->type}}<br>
-                                                    <b>Quantity :</b> {{$d->qunt}}
+                                                    <b>Quantity :</b>  {{$d->qunt}} 
                                                 </div>
-                                                 @if($d->status == 'Progress')
+                                                 @if($d->status == 'Processing')
                                                 <div class="timeline-footer">
                                                     <a class="btn btn-primary btn-sm" onclick="updateOrderStatus('{{$d->id}}','Delivering')">Complete</a>
                                                     <a class="btn btn-dark btn-sm" onclick="updateOrderStatus('{{$d->id}}','Cancel')">Cancel</a>

@@ -19,6 +19,7 @@ class CreateMenusTable extends Migration
             $table->string('label');
             $table->string('link')->nullable();
             $table->string('role');
+            $table->string('orders');
             $table->string('status');
             $table->timestamps();
         });

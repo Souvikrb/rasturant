@@ -10,7 +10,7 @@ use App\Http\Controllers\admin\AdministratorController;
 use App\Http\Controllers\Transaction\SaleController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\QuizController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\OrderController;
 
 use App\Http\Middleware\AdminAuthentication;
@@ -28,7 +28,7 @@ use App\Http\Middleware\UserAuthentication;
 
 
 Route::get('/',           [FrontendController::class,'index']);
-
+//Route::get('/',[AdministratorController::class,'index']);
 // User Routes
 Route::get('/register',  [UserController::class,'createUser'])->name('/register');
 Route::post('/register/user', [UserController::class,'registerUser'])->name('/register/user');
@@ -62,11 +62,11 @@ Route::middleware([AdminAuthentication::class])->group(function () {
     /* -------------------------------------------------------------------------------*/
 
     //All product route
-    Route::get('products',[ProductController::class,'index'])->name("products");
-    Route::get('products/add',[ProductController::class,'create'])->name('products/add');
-    Route::post('products/store',[ProductController::class,'store'])->name('products/store');
+    Route::get('/admin/products',[ProductController::class,'index'])->name("/admin/products");
+    Route::get('/admin/products/add',[ProductController::class,'create'])->name('/admin/products/add');
+    Route::post('/admin/products/store',[ProductController::class,'store'])->name('/admin/products/store');
     Route::prefix('product')->group(function () {
-        Route::get('delete/{id}',[ProductController::class,'destroy'])->name("deleteProduct");
+        Route::get('delete/{id}',[ProductController::class,'destroy'])->name("/admin/deleteProduct");
     });
     /* -------------------------------------------------------------------------------*/
 });

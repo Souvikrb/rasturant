@@ -18,6 +18,7 @@ class CreateSubmenusTable extends Migration
             $table->string('icon');
             $table->string('label');
             $table->string('link')->nullable();
+            $table->string('menu');
             $table->string('role');
             $table->string('order');
             $table->string('status');

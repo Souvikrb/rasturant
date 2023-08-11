@@ -13,6 +13,7 @@ class CartController extends Controller
     public function index()
     {   
         $userId = $this->getUserId();
+        //echo $userId;die;
         //$cart = cart::where('userid',$userId)->get();
         $cart = cart::select("products.product as productname","products.prodImg","products.slPrice","products.tags","carts.*",'products.id as prodid')->join("products","products.id","=","carts.product")->where('carts.userId',$userId)->where('carts.count','!=','0')->get();
         return view('frontend/cart')->with('cartdata',$cart);
@@ -37,7 +38,6 @@ class CartController extends Controller
         else: 
             
             $objs['userid']   = $userId;
-            $objs['tempId']   = $userId;
             $objs['product']  = $id;
             $objs['count']    = 1;
             $objs->save();
@@ -52,7 +52,7 @@ class CartController extends Controller
         $userId = Session::get('userId');
         if($userId == ''){
             setcookie('placeOrder', '1', time() + (60 * 30), "/");
-            return redirect('/register');
+            return redirect('/login');
         }else{
             
                 $cartData = cart::where('userId',$userId)->get();

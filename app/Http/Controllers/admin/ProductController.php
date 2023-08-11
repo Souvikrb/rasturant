@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\product;
 
@@ -25,6 +26,7 @@ class ProductController extends Controller
             'product'     => 'required|unique:products',
             'rgPrice'     => 'numeric',
             'slPrice'     => 'required|numeric',
+            'hPrice'      => 'numeric',
             'prodImg'     => 'required|image|mimes:jpeg,png,jpg,svg,webp|max:2048',
             'type'        => 'required',
             'status'      => 'required',
@@ -45,12 +47,15 @@ class ProductController extends Controller
         $data['product']     = $request->product;
         $data['rgPrice']     = $request->rgPrice;
         $data['slPrice']     = $request->slPrice;
+        $data['halfPrice']   = $request->hPrice;
+        $data['customize']   = $request->customize;
+        $data['description'] = $request->description;
         $data['prodImg']     = $imageName ;
         $data['type']        = $request->type;
         $data['tags']        = $request->tags;
         $data['status']      = $request->status;
         $data->save();
-        return redirect('/products');
+        return redirect('/admin/products');
     }
 
     public function destroy($id)

@@ -59,7 +59,7 @@
                                                 <button class="btn cart-btn" onclick="add_to_cart('{{$p->id}}','add')">ADD</button>
                                             @else
                                                 <button class="btn addbtn "><span onclick="add_to_cart('{{$p->id}}','remove')" class="minus">-</span><span class="count">{{$p->count}}</span><span class="plus" onclick="add_to_cart('{{$p->id}}','add')">+</span></button>
-                                            @endif;
+                                            @endif
                                         </div>
                                     </div>
                                     @if($p->tags != '')

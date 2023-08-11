@@ -201,12 +201,12 @@
                             </a>
                         </li>
                         @foreach($menu as $m)
-                            @if($m->link != '')
+                            @if($m['link'] != '')
                                 <li class="nav-item">
-                                    <a href="{{route($m->link)}}" class="nav-link">
-                                        <?=$m->icon?>
+                                    <a href="{{route($s['link'])}}" class="nav-link">
+                                        <?=$m['icon']?>
                                         <p>
-                                            {{$m->label}}
+                                            {{$m['label']}}
                                             <span class="badge badge-info right">2</span>
                                         </p>
                                     </a>
@@ -214,25 +214,21 @@
                             @else
                                 <li class="nav-item">
                                     <a href="#" class="nav-link">
-                                        {{$m->icon}}
+                                    <?=$m['icon']?>
                                         <p>
-                                            {{$m->label}}
+                                        {{$m['label']}}
                                             <i class="fas fa-angle-left right"></i>
                                         </p>
                                     </a>
                                     <ul class="nav nav-treeview">
+                                        @foreach($m['submenu'] as $s)
                                         <li class="nav-item">
-                                            <a href="{{url('')}}/products" class="nav-link">
-                                                <i class="far fa-circle nav-icon"></i>
-                                                <p>Products</p>
+                                            <a href="{{route($s['link'])}}" class="nav-link">
+                                                <?=$s['icon']?>
+                                                <p>{{$s['label']}}</p>
                                             </a>
                                         </li>
-                                        <li class="nav-item">
-                                            <a href="{{route('products/add')}}" class="nav-link">
-                                                <i class="far fa-circle nav-icon"></i>
-                                                <p>Add Product</p>
-                                            </a>
-                                        </li>
+                                        @endforeach
                                     </ul>
                                 </li>
                             @endif

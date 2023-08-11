@@ -26,6 +26,7 @@ class UserController extends Controller
 
     public function registerUser(Request $request)
     {
+        $userId = $this->getUserId();
 
         /* Create new customer ==============*/
         $validated = $request->validate([
@@ -36,6 +37,7 @@ class UserController extends Controller
             'address'      => 'required',
         ]);
         $data = new customer();
+        $data['uniqueId']      = $userId ;
         $data['username']      = $request->username;
         $data['phonenumber']   = $request->phonenumber;
         $data['password']      = $this->encrypt($request->password);
@@ -45,10 +47,9 @@ class UserController extends Controller
         $data->save();
 
         /* Data transfer cart to order table ==============*/
-        $customer_id = $data->id;
-        Session::put(array('userId'=>$data->id,'username'=>$request->username));
+        $customer_id = $userId;
+        Session::put(array('userId'=>$customer_id,'username'=>$request->username));
         setcookie('tempId', $this->encrypt($customer_id), time() + (60 * 30), "/");
-        $userId = $this->getUserId();
         $placeOrder = 0;
         if(isset($_COOKIE['placeOrder'])){
             $placeOrder = $_COOKIE['placeOrder'];
@@ -91,10 +92,10 @@ class UserController extends Controller
         $data = customer::where(array('phonenumber'=>$request->phonenumber))->first();
         if($data){
             if($request->password == $this->decrypt($data->Password)){
-                Session::put(array('userId'=>$data->id,'username'=>$data->username));
-                setcookie('tempId', $this->encrypt($data->id), time() + (60 * 30), "/");
+                Session::put(array('userId'=>$data->uniqueId,'username'=>$data->username));
+                setcookie('tempId', $this->encrypt($data->uniqueId), time() + (60 * 30), "/");
                 /* Data transfer cart to order table ==============*/
-                $customer_id = $data->id;
+                $customer_id = $data->uniqueId;
                 $userId = $this->getUserId();
                 $placeOrder = 0;
                 if(isset($_COOKIE['placeOrder'])){
