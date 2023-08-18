@@ -18,6 +18,8 @@ class CreateOrdersTable extends Migration
             $table->string('userid');
             $table->integer('product');
             $table->integer('count');
+            $table->integer('isHalf')->default(0);
+            $table->string('note');
             $table->string('mode');
             $table->string('bundle');
             $table->string('review')->nullable();

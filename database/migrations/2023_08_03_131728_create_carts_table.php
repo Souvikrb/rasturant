@@ -18,6 +18,7 @@ class CreateCartsTable extends Migration
             $table->string('userid');
             $table->integer('product');
             $table->integer('count');
+            $table->integer('isHalf')->default(0);
             $table->timestamps();
         });
     }

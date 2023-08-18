@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\customer;
 use App\Models\cart;
 use App\Models\order;
+use Illuminate\Support\Facades\Crypt;
 use DB;
 use Session;
+
 
 class UserController extends Controller
 {
@@ -64,6 +66,7 @@ class UserController extends Controller
                 $orderObj['userid']      = $customer_id;
                 $orderObj['product']     = $c->product;
                 $orderObj['count']       = $c->count;
+                $orderObj['isHalf']      = $c->isHalf;
                 $orderObj['bundle']      = $bundle;
                 $orderObj['mode']        = 'COD';
                 $orderObj['status']      = 'Processing';
@@ -96,20 +99,21 @@ class UserController extends Controller
                 setcookie('tempId', $this->encrypt($data->uniqueId), time() + (60 * 30), "/");
                 /* Data transfer cart to order table ==============*/
                 $customer_id = $data->uniqueId;
-                $userId = $this->getUserId();
+                $cookieId = Crypt::decryptString($_COOKIE['tempId']);
                 $placeOrder = 0;
                 if(isset($_COOKIE['placeOrder'])){
                     $placeOrder = $_COOKIE['placeOrder'];
                 }
                 if($placeOrder == '1'){
-                    $cartData = cart::where('userId',$userId)->get();
-                    $bundle = $userId.'-'.rand(10,100);
+                    $cartData = cart::where('userId',$cookieId)->get();
+                    $bundle = $customer_id.'-'.rand(10,100);
                     foreach($cartData as $c){
                         // $orderObj[] = array('userid'=>$c->userid,'product'=>$c->product,'count'=>$c->count,'mode'=>'COD','status'=>'Processing');
                         $orderObj = new order();
                         $orderObj['userid']      = $customer_id;
                         $orderObj['product']     = $c->product;
                         $orderObj['count']       = $c->count;
+                        $orderObj['isHalf']      = $c->isHalf;
                         $orderObj['bundle']      = $bundle;
                         $orderObj['mode']        = 'COD';
                         $orderObj['status']      = 'Processing';
@@ -119,7 +123,7 @@ class UserController extends Controller
                     //DB::table('orders')->insert($orderObj);
 
                     /* Delete cart data ==============*/
-                    cart::where('userid',$userId)->delete();
+                    cart::where('userid',$cookieId)->delete();
                     setcookie('placeOrder','', time() + (60 * 30), "/");
                     return redirect('/user/order');
                 }
@@ -164,7 +168,11 @@ class UserController extends Controller
     }
 
     public function order(){
-        $orderdata = order::select("orders.id","orders.mode","orders.count as qunt","orders.status","orders.created_at","p.product as product_name","p.slPrice","p.prodImg","p.type","c.username","c.phonenumber","c.altPhonenumber","c.deliveryArea","c.address")->leftJoin("products as p","orders.product","=","p.id")->leftJoin("customers as c","orders.userid","=","c.id")->get();
+        $userId = $this->getUserId();
+
+        $orderdata = order::select("orders.id","orders.mode","orders.bundle","orders.count as qunt","orders.status","orders.created_at","p.product as product_name","p.slPrice","p.prodImg","p.type","c.username","c.phonenumber","c.altPhonenumber","c.deliveryArea","c.address",DB::raw('( CASE WHEN orders.isHalf = 1 THEN " ( Half )" ELSE "" END) as half'),DB::raw("(select GROUP_CONCAT(CONCAT(o.count,' x ',pp.product, half,'<br>')) from orders o left join products pp on o.product = pp.id where o.bundle = orders.bundle  ) as plist"),DB::raw("( select sum(o.count* CASE WHEN o.isHalf = 1 THEN pp.halfPrice ELSE pp.slPrice END ) from orders o left join products pp on o.product = pp.id where o.bundle = orders.bundle  ) as sub_total")  )->leftJoin("products as p","orders.product","=","p.id")->leftJoin("customers as c","orders.userid","=","c.uniqueId")->where('orders.userid',$userId)->groupBy('orders.bundle')->get();
+        // echo '<pre>';
+        // print_r($orderdata);die;
  
         return view('frontend/dashboard/order')->with(array('data'=>$orderdata));
     }

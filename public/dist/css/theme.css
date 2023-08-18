@@ -83,5 +83,18 @@ padding-top: 20px;
     border-top: 3px solid #fed623;
 }
 .card-title {
-    font-size: 16px;
-}    
+    font-size: 13px;
+    width: 270px;
+    padding-top: 3px;
+}   
+.badge-status{
+    font-size: 9px;
+    
+} 
+.card-header {
+    padding: 0.75rem 12px;
+}
+.badge-plus{
+    padding: 5px 5px 4px 5px;
+    border-radius: 60%;
+}

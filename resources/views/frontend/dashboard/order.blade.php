@@ -32,13 +32,14 @@
                     ?>
                 <div class="col-md-12">
                     <!-- DIRECT CHAT WARNING -->
-                    <div class="card card-warning direct-chat direct-chat-warning shadow collapsed-card">
+                    <div class="card card-warning direct-chat direct-chat-warning shadow collapsed-card pattern1">
                         <div class="card-header">
                             <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-plus"></i>
+                                <button style="font-size: 10px;font-weight: 700;" type="button" class="btn btn-tool " data-card-widget="collapse">
+                                    <span > {{date('d M, Y  h:i a',strtotime($d->created_at))}}</span> <span class="badge badge-danger badge-plus"><i class="fas fa-plus"></i></span>
                                     
                                 </button>
+                                
                                 <!-- <button type="button" data-card-widget="maximize" class="btn btn-tool" title="Contacts"
                                     data-widget="chat-pane-toggle">
                                     <i class="fas fa-comments"></i>
@@ -46,13 +47,14 @@
                             </div>
                             <div class="card-title">
                                 <div class="row">
-                                    <div class="col-md-3 col-3">
+                                    <div class="col-md-3 col-3 m-auto text-center">
                                         <img class="badge-image" src="{{asset('storage/products/'.$d->prodImg)}}">
+                                        <p class="mt-2"><span class="right badge badge-{{$color}} pt-2 pb-2 badge-status ">{{$d->status}}</span></p>
                                     </div>
-                                    <div class="col-md-9 col-9">
-                                        {{$d->product_name}}
+                                    <div class="col-md-9 col-9 mt-3">
+                                        <b><?=str_replace(',', '', rtrim($d->plist,'<br>'))?> </b>
                                         <br>
-                                        <p><span class="right badge badge-{{$color}} pt-2 pb-2">{{$d->status}}</span></p>
+                                        
                                     </div>
                                 </div>
 
@@ -70,20 +72,31 @@
                                         <div>
                                             <i class="fas fa-hourglass-start bg-primary"></i>
                                             <div class="timeline-item">
-                                                @if($d->status != 'Cancel')
-                                                <span class="time"><i class="fas fa-clock"></i> 15 mins ago</span>
+                                                @if($d->status != 'Cancel' && $d->status != 'Completed')
+                                                <span class="time text-dark"><b><i class="fas fa-clock"></i>
+                                                @php
+                                                    $datetime_1 = $d->created_at; 
+                                                    $datetime_2 = date('d M, h:i a'); 
+ 
+                                                    $start_datetime = new DateTime($datetime_1); 
+                                                    $diff = $start_datetime->diff(new DateTime($datetime_2)); 
+                                                    echo $m =  ($diff->d == '0')? '':$diff->d.' days ';
+                                                    echo $m =  ($diff->h == '0')? '':$diff->h.' hours ';
+                                                    echo $m =  ($diff->i == '0')? '':$diff->i.' mins ago ';
+
+                                                @endphp
+
+                                             </b></span>
                                                 @endif
-                                                <h3 class="timeline-header"><a href="#" class="text-danger">{{$d->product_name}}</a> is {{$d->status}}</h3>
+                                                <h3 class="timeline-header"><a href="#" class="text-danger">Your Order</a> is  {{$d->status}}</h3>
 
                                                 <div class="timeline-body">
-                                                    <b>Price :</b> {{$d->slPrice * $d->qunt}}<br>
-                                                    <b>Type :</b> {{$d->type}}<br>
-                                                    <b>Quantity :</b> {{$d->qunt}}
+                                                    <p><?=str_replace(',', '', rtrim($d->plist,'<br>'))?> </p>
+                                                    <b>Total Price : <span class="text-danger"> ₹{{$d->sub_total}}</span></b><br>
                                                 </div>
-                                                 @if($d->status == 'Progress')
+                                                 @if($d->status == 'Processing')
                                                 <div class="timeline-footer">
-                                                    <a class="btn btn-primary btn-sm" onclick="updateOrderStatus('{{$d->id}}','Delivering')">Complete</a>
-                                                    <a class="btn btn-dark btn-sm" onclick="updateOrderStatus('{{$d->id}}','Cancel')">Cancel</a>
+                                                    <!-- <a class="btn btn-dark btn-sm" onclick="updateOrderStatus('{{$d->bundle}}','Cancel')">Cancel</a> -->
                                                 </div>
                                                 @endif
                                             </div>
@@ -92,38 +105,29 @@
                                         <div>
                                             <i class="fas fa-bicycle {{$progress_delivery}}"></i>
                                             <div class="timeline-item">
-                                                <span class="time"><i class="fas fa-clock"></i> 5 mins ago</span>
-                                                <h3 class="timeline-header no-border"><a href="#">Tandoor Mahal</a> is delivering this order</h3>
-                                                @if($d->status != 'Completed')
-                                                <div class="timeline-footer">
-                                                    <a class="btn btn-primary btn-sm" onclick="updateOrderStatus('{{$d->id}}','Completed')">Delivery Complete</a>
-                                                </div>
-                                                @endif
+                                                <!-- <span class="time"><i class="fas fa-clock"></i> 5 mins ago</span> -->
+                                                <h3 class="timeline-header no-border "><a href="#" class="text-danger">Tandoor Mahal</a> is delivering this order</h3>
+                                            
                                             </div>
                                             
                                         </div>
                                         @if($d->status != 'Completed')
                                         <div class="time-label">
-                                            <span class="bg-green">Expected : 30min</span>
+                                            <span class="bg-green">Expected : 45min</span>
                                         </div>
                                         @endif
                                         <div>
                                             <div class="timeline-item">
-                                                <span class="time"><i class="fas fa-clock"></i> 5 mins ago</span>
-                                                <h3 class="timeline-header no-border"><a href="#">{{$d->username}}</a> have placed this order.</h3>
+                                                <!-- <span class="time"><i class="fas fa-clock"></i> 5 mins ago</span> -->
+                                                <h3 class="timeline-header no-border text-danger">Your Delivery Address</h3>
                                                 <div class="timeline-body">
-                                                    <b>Phone No. :</b> {{$d->phonenumber}} <br>
+                                                    <b>Phone No :</b> {{$d->phonenumber}} <br>
                                                     @if($d->altPhonenumber != '')
-                                                    <b>Alt Phone No. :</b> {{$d->altPhonenumber}}  <br>
+                                                    <b>Alt Phone No :</b> {{$d->altPhonenumber}}  <br>
                                                     @endif
                                                     <b>Delivery Area :</b> {{$d->deliveryArea}}<br>
                                                     <b>Address :</b> {{$d->address}}
                                                 </div>
-                                                @if($d->status != 'Completed')
-                                                <div class="timeline-footer">
-                                                    <a class="btn btn-primary btn-sm" onclick="updateOrderStatus('{{$d->id}}','Completed')">Payment Complete</a>
-                                                </div>
-                                                @endif
                                             </div>
                                         </div>
                                         <div>

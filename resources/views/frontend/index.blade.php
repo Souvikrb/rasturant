@@ -48,7 +48,7 @@
                         <div class="menu-col col-lg-6 col-md-12 col-sm-12">
                         <!--Block-->
                             <div class="dish-block">
-                                <div class="inner-box">
+                                <div class="inner-box" id="prod-sec{{$p->id}}">
                                     <div class="dish-image">
                                         <a href="#">
                                             <img src="{{asset('storage/products/'.$p->prodImg)}}"
@@ -69,19 +69,33 @@
                                         </div>
                                     @endif
                                     <div class="title clearfix">
+                                        <input type="hidden" class="halfPrice" value="{{$p->halfPrice}}">
+                                        <input type="hidden" class="rgPrice" value="{{$p->rgPrice}}">
+                                        <input type="hidden" class="slPrice" value="{{$p->slPrice}}">
                                         <div class="ttl clearfix">
                                             <h5>
                                                 <a href="#"><?=$p->product?>
                                                 <!-- <span class="s-info">Best Choice</span> -->
                                                 </a>
+                                                <div class="custom-control custom-switch mt-2">
+                                                  <input type="checkbox" <?=($p->isHalf == '1')?'checked':''?> class="custom-control-input" data-id="{{$p->id}}" id="customSwitch{{$p->id}}">
+                                                  @if($p->halfPrice != '' && $p->halfPrice > 0)
+                                                    <label class="custom-control-label " for="customSwitch{{$p->id}}"> half</label>
+                                                  @endif
+                                                </div>
 
                                             </h5>
                                         </div>
                                         <div class="price">
-                                            @if($p->rgPrice != '')
-                                            <small><del >₹{{$p->rgPrice}}</del></small>
+                                            @if($p->isHalf == '1')
+                                                <span class="text-danger">₹{{$p->halfPrice}}</span> 
+                                            @else
+                                                @if($p->rgPrice != '')
+                                                <small><del >₹{{$p->rgPrice}}</del></small>
+                                                @endif
+                                                <span class="text-danger">₹{{$p->slPrice}}</span> 
                                             @endif
-                                            <span class="text-danger">₹{{$p->slPrice}}</span> 
+                                            
                                         </div>
                                     </div>
                                     <div class="text desc">
@@ -103,23 +117,17 @@
     </div>
 </section>
 <script>
-// $('.tag-badge').click(function(){
-//     var slug = $(this).data('slug');
-//     $('#cat_val').val(slug);
-//     $('.tag-badge').removeClass('select');
-//     $(this).addClass('select');
-// 	$('#filterForm').submit();
 
-// })
-// $('.cart-btn').click(function(){
-//     var id = $(this).data('id');
-// })
 
 function add_to_cart(id,type){
+    var hIdx = '0';
+    if($('#prod-sec'+id+' .title .custom-control-input').is(":checked")){
+         hIdx = '1';
+    }
     $.ajax({
         url: '{{ url('/cart/add') }}',
         type: 'POST',              
-        data: {'id':id,'type':type},
+        data: {'id':id,'type':type,'hIdx':hIdx},
         dataType: 'JSON',
         success: function(result)
         {
@@ -133,6 +141,31 @@ function add_to_cart(id,type){
         }
     });
 }
+
+$('.title .custom-control-input').change(function(){
+    var hprice =  $(this).parent().parent().parent().parent().find('.halfPrice').val();
+    var sprice =  $(this).parent().parent().parent().parent().find('.slPrice').val();
+    var rprice =  $(this).parent().parent().parent().parent().find('.rgPrice').val();
+    var id = $(this).data('id');
+    if($(this).is(":checked")){
+        var hIdx = '1';
+        var c = $(this).parent().parent().parent().parent().find('.price').html('<span class="text-danger">₹'+hprice+'</span>');
+    }else{
+        var hIdx = '0';
+        var c = $(this).parent().parent().parent().parent().find('.price').html('<small><del>₹'+rprice+'</del></small><span class="text-danger">₹'+sprice+'</span>');
+    }
+
+    $.ajax({
+        url: '{{ url('/cart/add/half') }}',
+        type: 'POST',              
+        data: {'id':id,'hIdx':hIdx},
+        dataType: 'JSON',
+        success: function(result)
+        {
+            
+        }
+    });
+})
 
 </script>
 

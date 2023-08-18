@@ -30,7 +30,11 @@
                                     @endphp
                                     @foreach($cartdata as $data)
                                     @php
-                                        $total += $data->slPrice * $data->count;
+                                        if($data->isHalf == '1'):
+                                            $total +=$data->halfPrice * $data->count;
+                                        else:
+                                            $total += $data->slPrice * $data->count;
+                                        endif;
                                     @endphp
                                     <div class="menu-col col-lg-12 col-md-12 col-sm-12">
                                         <div class="inner ">
@@ -63,7 +67,15 @@
 
                                                             </h5>
                                                         </div>
-                                                        <div class="price"><span>₹{{$data->slPrice * $data->count}}</span> </div>
+                                                        <div class="price"><span>₹
+                                                            @php
+                                                                if($data->isHalf == '1'):
+                                                                    echo $data->halfPrice * $data->count;
+                                                                else:
+                                                                    echo $data->slPrice * $data->count;
+                                                                endif;
+                                                            @endphp
+                                                        </span> </div>
                                                     </div>
                                                 </div>
                                             </div>

@@ -39,6 +39,7 @@ Route::get('/logout', [UserController::class,'logout'])->name('/logout');
 // cart routes
 Route::get('/cart',          [CartController::class,'index'])->name('/cart');
 Route::post('/cart/add',     [CartController::class,'addtoCart'])->name('/cart/add');
+Route::post('/cart/add/half',[CartController::class,'addHalf'])->name('/cart/add/half');
 Route::get('/order/submit',  [CartController::class,'orderSubmit'])->name('/order/submit');
 
 /* Administrator route list =======================================================*/

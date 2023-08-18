@@ -26,7 +26,7 @@ class FrontendController extends Controller
     {
         
         $userId = $this->getUserId();
-        $product = DB::select("SELECT p.*,c.count FROM `products` p left join carts c on p.id = c.product and c.userId = '$userId'");	
+        $product = DB::select("SELECT p.*,c.count,c.isHalf FROM `products` p left join carts c on p.id = c.product and c.userId = '$userId' order by p.id");	
         //$product = product::select("products.*","carts.count")->leftJoin("carts","products.id","=","carts.product",'carts.tempId',"=",'www')->get();
         return view('frontend/index')->with('products',$product);
     }

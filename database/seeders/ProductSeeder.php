@@ -16,9 +16,10 @@ class ProductSeeder extends Seeder
     {
         for($i = 0;$i<5;$i++){
             product::create([
-                'product' => 'product '.Str::random(4),
+                'product' => 'Product '.rand(1,10),
                 'rgPrice' => 100,
                 'slPrice' => 60,
+                'halfPrice' => 30,
                 'prodImg' => 'defaulticon.png',
                 'type' => 'Non-Veg',
                 'tags' => ''
