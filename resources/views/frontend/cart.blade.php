@@ -1,6 +1,11 @@
 <x-frontend-header />
+<style>
+    .cart-popsec{
+        display: none;
+    }
+</style>
 <section class="inner-banner" style="background:#000000">
-    <div class="image-layer" style="background-image: url(<?=URL::to('/');?>/web-resources/images/slider/cart.jpg);">
+    <div class="image-layer" style="background-image: url({{asset('web-resources/images/slider/cart.jpg')}});">
     </div>
     <div class="auto-container">
         <div class="inner">
@@ -30,13 +35,13 @@
                                     @endphp
                                     @foreach($cartdata as $data)
                                     @php
-                                        if($data->isHalf == '1'):
+                                        if($data->isHalf == 'half'):
                                             $total +=$data->halfPrice * $data->count;
                                         else:
                                             $total += $data->slPrice * $data->count;
                                         endif;
                                     @endphp
-                                    <div class="menu-col col-lg-12 col-md-12 col-sm-12">
+                                    <div class="menu-col col-lg-12 col-md-12 col-sm-12" id="sec{{$data->prodid}}">
                                         <div class="inner ">
                                             <!--Block-->
                                             <div class="dish-block">
@@ -48,9 +53,9 @@
                                                         </a>
                                                         <div class="cart-sec prod{{$data->prodid}}" >
                                                             @if( $data->count < '1')
-                                                                <button class="btn cart-btn" onclick="add_to_cart('{{$data->prodid}}','add')">ADD</button>
+                                                                <button class="btn cart-btn" onclick="add_to_cart('{{$data->prodid}}','add','{{$data->isHalf}}')">ADD</button>
                                                             @else
-                                                                <button class="btn addbtn "><span onclick="add_to_cart('{{$data->prodid}}','remove')" class="minus">-</span><span class="count">{{$data->count}}</span><span class="plus" onclick="add_to_cart('{{$data->prodid}}','add')">+</span></button>
+                                                                <button class="btn addbtn "><span onclick="add_to_cart('{{$data->prodid}}','remove'$data->isHalf)" class="minus">-</span><span class="count">{{$data->count}}</span><span class="plus" onclick="add_to_cart('{{$data->prodid}}','add','{{$data->isHalf}}')">+</span></button>
                                                             @endif
                                                         </div>
                                                     </div>
@@ -61,15 +66,21 @@
                                                         </div>
                                                     @endif
                                                     <div class="title clearfix">
-                                                        <div class="ttl clearfix">
+                                                        <div class="ttl clearfix cartproduct">
                                                             <h5>
-                                                                <a href="#">{{$data->productname}}</a>
+                                                                <a href="{{url('/')}}/#prod-sec{{$data->product}}">{{$data->productname}}
+                                                                     @php
+                                                                        if($data->isHalf == 'half'):
+                                                                            echo '( half )';
+                                                                        endif;
+                                                                    @endphp
+                                                                </a>
 
                                                             </h5>
                                                         </div>
                                                         <div class="price"><span>₹
                                                             @php
-                                                                if($data->isHalf == '1'):
+                                                                if($data->isHalf == 'half'):
                                                                     echo $data->halfPrice * $data->count;
                                                                 else:
                                                                     echo $data->slPrice * $data->count;
@@ -157,11 +168,11 @@
 </section>
 <br>
 <script>
-    function add_to_cart(id,type){
+    function add_to_cart(id,type,hIdx){
     $.ajax({
         url: '{{ url('/cart/add') }}',
         type: 'POST',              
-        data: {'id':id,'type':type},
+        data: {'id':id,'type':type,'hIdx':hIdx},
         dataType: 'JSON',
         success: function(result)
         {
@@ -169,8 +180,9 @@
                 $('.prod'+id).html('<button class="btn addbtn "><span onclick="add_to_cart('+"'"+id+"'"+","+"'remove'"+')"  class="minus">-</span><span class="count">'+result.count+'</span><span class="plus" onclick="add_to_cart('+"'"+id+"'"+","+"'add'"+')">+</span></button>');
             }
             if(result.count < 1){
-                $('.prod'+id).html('<button onclick="add_to_cart('+"'"+id+"'"+","+"'add'"+')" class="btn cart-btn" >ADD</button>');
+                $('#sec'+id).remove();
             }
+            location.reload();
         
         }
     });

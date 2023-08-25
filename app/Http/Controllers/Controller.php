@@ -32,7 +32,7 @@ class Controller extends BaseController
         }else{
             return $this->decrypt($tempId);
         }
-        
+
     }
 
     public function encrypt($val){

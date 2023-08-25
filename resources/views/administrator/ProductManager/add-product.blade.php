@@ -67,7 +67,7 @@
                                                     <input type="text" 
                                                         oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
                                                         maxlength="6" class="form-control number"
-                                                        placeholder="Half Price" required value="{{old('slPrice')}}" name="hPrice" id="hPrice">
+                                                        placeholder="Half Price"  value="{{old('slPrice')}}" name="hPrice" id="hPrice">
                                                         @error('hPrice')
                                                             <small class="error">{{ $message }}</small>
                                                         @enderror
@@ -99,7 +99,10 @@
                                             <label>Category</label>
                                             <select class="form-control " required name="category" id="category">
                                                 <option value="">--select--</option>
-                                                <option value="Single">Single</option>
+                                                <option value="Breads">Breads</option>
+                                                <option value="Main Course">Main Course</option>
+                                                <option value="Snacks">Snacks</option>
+                                                <option value="Fusion">Fusion</option>
                                                 <option value="Thali">Thali</option>
                                             </select>
                                             @error('category')

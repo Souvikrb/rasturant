@@ -4,7 +4,7 @@
 <!-- Inner Banner Section -->
 <section class="inner-banner home-banner">
     <div class="image-layer"
-        style="background-image: url(<?=URL::to('/');?>/web-resources/images/slider/slider1.jpg);background-position: bottom;">
+        style="background-image: url({{asset('web-resources/images/slider/slider1.jpg')}});background-position: bottom;">
     </div>
     <div class="auto-container">
         <div class="inner">
@@ -45,12 +45,19 @@
                 <div class="row clearfix">
                     @if(!empty($products))
                         @foreach($products as $p)
-                        <div class="menu-col col-lg-6 col-md-12 col-sm-12">
+                        @php 
+                            if($p->type == 'Non-Veg'):
+                                $Taglogo = 'nonveg-logo.png';
+                            else:
+                                $Taglogo = 'veg-logo.png';
+                            endif;
+                        @endphp
+                        <div class="menu-col col-lg-6 col-md-12 col-sm-12" >
                         <!--Block-->
                             <div class="dish-block">
                                 <div class="inner-box" id="prod-sec{{$p->id}}">
                                     <div class="dish-image">
-                                        <a href="#">
+                                        <a href="javascript:void(0)">
                                             <img src="{{asset('storage/products/'.$p->prodImg)}}"
                                                 alt="">
                                         </a>
@@ -74,23 +81,25 @@
                                         <input type="hidden" class="slPrice" value="{{$p->slPrice}}">
                                         <div class="ttl clearfix">
                                             <h5>
-                                                <a href="#"><?=$p->product?>
+                                                <a href="javascript:void(0)"><img src="{{asset('web-resources/images/'.$Taglogo)}}" width="13px">&nbsp;&nbsp;<?=$p->product?>
+                                                
+                                                
                                                 <!-- <span class="s-info">Best Choice</span> -->
                                                 </a>
+                                                @if($p->halfPrice != '' && $p->halfPrice > 0)
                                                 <div class="custom-control custom-switch mt-2">
-                                                  <input type="checkbox" <?=($p->isHalf == '1')?'checked':''?> class="custom-control-input" data-id="{{$p->id}}" id="customSwitch{{$p->id}}">
-                                                  @if($p->halfPrice != '' && $p->halfPrice > 0)
+                                                  <input type="checkbox" <?=($p->isHalf == 'half' && $p->count != '0')?'checked':''?> class="custom-control-input" data-id="{{$p->id}}" id="customSwitch{{$p->id}}">
                                                     <label class="custom-control-label " for="customSwitch{{$p->id}}"> half</label>
-                                                  @endif
                                                 </div>
+                                                @endif
 
                                             </h5>
                                         </div>
                                         <div class="price">
-                                            @if($p->isHalf == '1')
+                                            @if($p->isHalf == 'half')
                                                 <span class="text-danger">₹{{$p->halfPrice}}</span> 
                                             @else
-                                                @if($p->rgPrice != '')
+                                                @if($p->rgPrice != '' && $p->rgPrice > 0)
                                                 <small><del >₹{{$p->rgPrice}}</del></small>
                                                 @endif
                                                 <span class="text-danger">₹{{$p->slPrice}}</span> 
@@ -99,9 +108,9 @@
                                         </div>
                                     </div>
                                     <div class="text desc">
-                                        <!-- <a href="#">
-                                                            <p>Boneless chicken marinated in in butter, tomato based sauce and a variety of our special in house spices.</p>
-                                                        </a> -->
+                                        <a href="javascript:void(0)">
+                                            <p>{{$p->description}}</p>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -120,9 +129,9 @@
 
 
 function add_to_cart(id,type){
-    var hIdx = '0';
+    var hIdx = ' ';
     if($('#prod-sec'+id+' .title .custom-control-input').is(":checked")){
-         hIdx = '1';
+         hIdx = 'half';
     }
     $.ajax({
         url: '{{ url('/cart/add') }}',
@@ -133,9 +142,21 @@ function add_to_cart(id,type){
         {
             if(result.count > 0){
                 $('.prod'+id).html('<button class="btn addbtn "><span onclick="add_to_cart('+"'"+id+"'"+","+"'remove'"+')"  class="minus">-</span><span class="count">'+result.count+'</span><span class="plus" onclick="add_to_cart('+"'"+id+"'"+","+"'add'"+')">+</span></button>');
+
+                $('.cart-pack').html('<i class="fa fa-shopping-cart"></i><span class="badge badge-danger cart-badge">'+result.cart_count+'</span>');
+                
             }
             if(result.count < 1){
                 $('.prod'+id).html('<button onclick="add_to_cart('+"'"+id+"'"+","+"'add'"+')" class="btn cart-btn" >ADD</button>');
+                $('.cart-pack').html('<i class="fa fa-shopping-cart"></i>');
+                
+            }
+
+            if(result.cart_count > 0){
+                $('.cart-popsec .main-col b').text(result.cart_count+' ITEMS ADDED');
+                $('.cart-popsec').show('1000');
+            }else{
+                $('.cart-popsec').hide('1000');
             }
         
         }
@@ -148,10 +169,10 @@ $('.title .custom-control-input').change(function(){
     var rprice =  $(this).parent().parent().parent().parent().find('.rgPrice').val();
     var id = $(this).data('id');
     if($(this).is(":checked")){
-        var hIdx = '1';
+        var hIdx = 'half';
         var c = $(this).parent().parent().parent().parent().find('.price').html('<span class="text-danger">₹'+hprice+'</span>');
     }else{
-        var hIdx = '0';
+        var hIdx = ' ';
         var c = $(this).parent().parent().parent().parent().find('.price').html('<small><del>₹'+rprice+'</del></small><span class="text-danger">₹'+sprice+'</span>');
     }
 

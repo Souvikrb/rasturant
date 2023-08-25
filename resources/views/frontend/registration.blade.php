@@ -76,6 +76,7 @@
                                             <option>select area*</option>
                                             <option value="Rasapunja More" <?=(old('deliveryArea') == 'Rasapunja More')?'selected':''?>>Rasapunja More</option>
                                             <option <?=(old('deliveryArea') == 'Camp')?'selected':''?> value="Camp">Camp</option>
+                                            <option <?=(old('deliveryArea') == 'Other')?'selected':''?> value="Other">Other</option>
                                         </select>
                                         @error('deliveryArea')
                                                 <small class="error">{{ $message }}</small>

@@ -62,15 +62,17 @@ class UserController extends Controller
             $bundle = $userId.'-'.rand(10,100);
             foreach($cartData as $c){
                 // $orderObj[] = array('userid'=>$c->userid,'product'=>$c->product,'count'=>$c->count,'mode'=>'COD','status'=>'Processing');
-                $orderObj = new order();
-                $orderObj['userid']      = $customer_id;
-                $orderObj['product']     = $c->product;
-                $orderObj['count']       = $c->count;
-                $orderObj['isHalf']      = $c->isHalf;
-                $orderObj['bundle']      = $bundle;
-                $orderObj['mode']        = 'COD';
-                $orderObj['status']      = 'Processing';
-                $orderObj->save();
+                if($c->count > 0){
+                    $orderObj = new order();
+                    $orderObj['userid']      = $customer_id;
+                    $orderObj['product']     = $c->product;
+                    $orderObj['count']       = $c->count;
+                    $orderObj['isHalf']      = $c->isHalf;
+                    $orderObj['bundle']      = $bundle;
+                    $orderObj['mode']        = 'COD';
+                    $orderObj['status']      = 'Processing';
+                    $orderObj->save();
+                }
                 
             }
             //DB::table('orders')->insert($orderObj);
@@ -109,16 +111,17 @@ class UserController extends Controller
                     $bundle = $customer_id.'-'.rand(10,100);
                     foreach($cartData as $c){
                         // $orderObj[] = array('userid'=>$c->userid,'product'=>$c->product,'count'=>$c->count,'mode'=>'COD','status'=>'Processing');
-                        $orderObj = new order();
-                        $orderObj['userid']      = $customer_id;
-                        $orderObj['product']     = $c->product;
-                        $orderObj['count']       = $c->count;
-                        $orderObj['isHalf']      = $c->isHalf;
-                        $orderObj['bundle']      = $bundle;
-                        $orderObj['mode']        = 'COD';
-                        $orderObj['status']      = 'Processing';
-                        $orderObj->save();
-                        
+                        if($c->count > 0){
+                            $orderObj = new order();
+                            $orderObj['userid']      = $customer_id;
+                            $orderObj['product']     = $c->product;
+                            $orderObj['count']       = $c->count;
+                            $orderObj['isHalf']      = $c->isHalf;
+                            $orderObj['bundle']      = $bundle;
+                            $orderObj['mode']        = 'COD';
+                            $orderObj['status']      = 'Processing';
+                            $orderObj->save();
+                        }
                     }
                     //DB::table('orders')->insert($orderObj);
 
@@ -170,11 +173,36 @@ class UserController extends Controller
     public function order(){
         $userId = $this->getUserId();
 
-        $orderdata = order::select("orders.id","orders.mode","orders.bundle","orders.count as qunt","orders.status","orders.created_at","p.product as product_name","p.slPrice","p.prodImg","p.type","c.username","c.phonenumber","c.altPhonenumber","c.deliveryArea","c.address",DB::raw('( CASE WHEN orders.isHalf = 1 THEN " ( Half )" ELSE "" END) as half'),DB::raw("(select GROUP_CONCAT(CONCAT(o.count,' x ',pp.product, half,'<br>')) from orders o left join products pp on o.product = pp.id where o.bundle = orders.bundle  ) as plist"),DB::raw("( select sum(o.count* CASE WHEN o.isHalf = 1 THEN pp.halfPrice ELSE pp.slPrice END ) from orders o left join products pp on o.product = pp.id where o.bundle = orders.bundle  ) as sub_total")  )->leftJoin("products as p","orders.product","=","p.id")->leftJoin("customers as c","orders.userid","=","c.uniqueId")->where('orders.userid',$userId)->groupBy('orders.bundle')->get();
+        $orderdata = order::select("orders.id","orders.mode","orders.bundle","orders.count as qunt","orders.status","orders.created_at","p.product as product_name","p.slPrice","p.prodImg","p.type","c.username","c.phonenumber","c.altPhonenumber","c.deliveryArea","c.address",DB::raw("(select GROUP_CONCAT(CONCAT(o.count,' x ',pp.product, CASE WHEN o.isHalf = 'half' THEN ' ( Half )' ELSE '' END,'<br>')) from orders o left join products pp on o.product = pp.id where o.bundle = orders.bundle  ) as plist"),DB::raw("( select sum(o.count* CASE WHEN o.isHalf = 'half' THEN pp.halfPrice ELSE pp.slPrice END ) from orders o left join products pp on o.product = pp.id where o.bundle = orders.bundle  ) as sub_total")  )->leftJoin("products as p","orders.product","=","p.id")->leftJoin("customers as c","orders.userid","=","c.uniqueId")->where('orders.userid',$userId)->groupBy('orders.bundle')->get();
         // echo '<pre>';
         // print_r($orderdata);die;
  
         return view('frontend/dashboard/order')->with(array('data'=>$orderdata));
+    }
+
+    public function profile()
+    {
+        $userId = $this->getUserId();
+        $data = customer::where(array('uniqueId'=>$userId))->first();
+        return view('frontend/dashboard/profile')->with(array('customer_data'=>$data));
+    }
+
+    public function user_update(Request $request)
+    {
+        $userId = $this->getUserId();
+
+        /* Create new customer ==============*/
+        $validated = $request->validate([
+            'username'     => 'required',
+            'phonenumber'  => 'required|numeric',
+            'deliveryArea' => 'required',
+            'address'      => 'required',
+            
+        ]);
+
+        customer::where('uniqueId', $userId)
+        ->update(['username' => $request->username,'phonenumber' => $request->phonenumber,'deliveryArea' => $request->deliveryArea,'address' => $request->address,'email' => $request->email]);
+        return redirect('/user/profile');
     }
 
 

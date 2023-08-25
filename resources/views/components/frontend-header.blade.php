@@ -7,17 +7,17 @@
 <title> Tandoor House</title>
 <meta name="csrf-token" content="{{ csrf_token() }}" />
 <!-- Stylesheets -->
-<link href="{{url('web-resources/css/bootstrap.css')}}" rel="stylesheet" async>
-<link href="{{url('web-resources/css/style.css')}}" rel="stylesheet" async>
+<link href="{{asset('web-resources/css/bootstrap.css')}}" rel="stylesheet" async>
+<link href="{{asset('web-resources/css/style.css')}}" rel="stylesheet" async>
 <link rel="shortcut icon" href="" type="image/x-icon">
 <link rel="icon" href="" type="image/x-icon">
 <!-- Responsive -->
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-<link href="{{url('web-resources/css/responsive.css')}}" rel="stylesheet" async>
-<link href="{{url('web-resources/css/mystyle.css')}}" rel="stylesheet" async>
+<link href="{{asset('web-resources/css/responsive.css')}}" rel="stylesheet" async>
+<link href="{{asset('web-resources/css/mystyle.css')}}" rel="stylesheet" async>
 
-<script src="{{url('web-resources/js/jquery.js')}}" ></script>
+<script src="{{asset('web-resources/js/jquery.js')}}" ></script>
 <script type="text/javascript">
     $.ajaxSetup({
         headers: {
@@ -80,7 +80,7 @@
                 <div class="main-box clearfix">
                     <!--Logo-->
                     <div class="logo-box">
-                         <div class="logo"><a href="<?=URL::to('/');?>"><img src="<?=URL::to('/');?>/web-resources/images/logo.png" alt=""></a></div>
+                         <div class="logo"><a href="<?=URL::to('/');?>"><img src="{{asset('web-resources/images/logo.png')}}" alt=""></a></div>
                     </div>
 
                     <div class="nav-box clearfix">
@@ -88,8 +88,10 @@
                         <div class="nav-outer clearfix">         
                             <nav class="main-menu">
                                 <ul class="navigation clearfix">
-                                <li class="current"><a href="<?=URL::to('/');?>">Home</a></li>
-                                <li><a href="about.html">About Us</a></li>
+                                    <li><a href="<?=URL::to('/');?>">Recomanded</a></li>
+                                    <li><a href="<?=URL::to('/');?>">Special Thali</a></li>
+                                    <li><a href="<?=URL::to('/');?>">September Special Offer</a></li>
+                                    <li><a href="https://api.whatsapp.com/send?phone=9123345052&amp;text=Hello" target="_blank">Chat With Us</a></li>
                                 </ul> 
 
                             </nav>
@@ -105,20 +107,22 @@
                             
                             <a href="{{route('/cart')}}" class="cart-icon search-mob-btn mr-3">
                                 <span class="btn-wrap">
-                                    <span class="text-one">
+                                    <span class="text-one cart-pack">
                                         <i class="fa fa-shopping-cart"></i>
-                                        <span class="badge badge-danger cart-badge">1</span>
+                                        @if(Session::get('cart_count') > 0)
+                                            <span class="badge badge-danger cart-badge">{{Session::get('cart_count')}}</span>
+                                        @endif
                                     </span>
                                 </span>
                             </a>
-                            <a href="{{route('/cart')}}" class="cart-icon search-mob-btn mr-3">
+                            <!-- <a href="{{route('/cart')}}" class="cart-icon search-mob-btn mr-3">
                                 <span class="btn-wrap">
                                     <span class="text-one">
                                         <i class="fa fa-bell"></i>
                                         <span class="badge badge-danger cart-badge">1</span>
                                     </span>
                                 </span>
-                            </a>
+                            </a> -->
                         </div>
                     </form>
                         </div>
@@ -150,13 +154,16 @@
         <!-- Hidden Bar Wrapper -->
         <div class="inner-box">
             <div class="cross-icon hidden-bar-closer"><span class="far fa-close"></span></div>
-            <div class="logo-box"><a href="<?=URL::to('/');?>" ><img src="<?=URL::to('/');?>/web-resources/images/logo.png" alt="" ></a></div>
+            <div class="logo-box"><a href="<?=URL::to('/');?>" ><img src="{{asset('web-resources/images/logo.png')}}" alt="" ></a></div>
             
             <!-- .Side-menu -->
             <div class="side-menu">
                 <ul class="navigation clearfix">
-                    <li class="current"><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="<?=URL::to('/');?>">Recomanded</a></li>
+                    <li><a href="<?=URL::to('/');?>">Special Thali</a></li>
+                    <li><a href="<?=URL::to('/');?>">September Special Offer</a></li>
+                    <li><a href="https://api.whatsapp.com/send?phone=9123345052&amp;text=Hello" target="_blank">Chat With Us</a></li>
+
 
                 </ul>
             </div><!-- /.Side-menu -->
@@ -173,8 +180,8 @@
     <section class="info-bar">
         <div class="inner-box">
             <div class="cross-icon"><span class="far fa-close"></span></div>
-            <div class="logo-box"><a href="<?=URL::to('/');?>" ><img src="<?=URL::to('/');?>/web-resources/images/logo.png" alt="" ></a></div>
-            <div class="image-box"><img src="<?=URL::to('/');?>/web-resources/images/logo.png" alt="" title=""></div>
+            <div class="logo-box"><a href="<?=URL::to('/');?>" ><img src="{{asset('web-resources/images/logo.png')}}" alt="" ></a></div>
+            <div class="image-box"><img src="{{asset('web-resources/images/logo.png')}}" alt="" title=""></div>
 
             <h2>Visit Us</h2>
             <ul class="info">

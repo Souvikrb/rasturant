@@ -23,8 +23,8 @@ class CartController extends Controller
     public function addtoCart(Request $request){
         $id = $request->id;
         $type = $request->type;
-        $hIdx = $request->hIdx;
-        $userId = $this->decrypt($_COOKIE['tempId']);
+        $hIdx = ($request->hIdx == '')?' ':$request->hIdx;
+        $userId = $this->getUserId();
         $data = cart::where(array('userid'=>$userId,'product'=>$id))->first();
         $objs = new cart();
         if(!empty($data)):
@@ -34,10 +34,16 @@ class CartController extends Controller
             }else if($type == 'remove'){
                 $count--;
             }
+
+            if($count > 0){
+                cart::where(array('userid'=>$userId,'product'=>$id))->update(array('count' => $count,'isHalf' => $hIdx));
+            }else{
+                cart::where(array('userid'=>$userId,'product'=>$id))->delete();
+            }
             
-            cart::where(array('userid'=>$userId,'product'=>$id))->update(array('count' => $count,'isHalf' => $hIdx));
             
-            echo json_encode(array('count'=>$count));
+           $cart_count = cart::where('userid',$userId)->count();
+            echo json_encode(array('count'=>$count,'cart_count'=>$cart_count));
         else: 
             
             $objs['userid']   = $userId;
@@ -45,7 +51,8 @@ class CartController extends Controller
             $objs['count']    = 1;
             $objs['isHalf']   = $hIdx;
             $objs->save();
-            echo json_encode(array('count'=>1));
+            $cart_count = cart::where('userid',$userId)->count();
+            echo json_encode(array('count'=>'1','cart_count'=>$cart_count));
         endif;
         
     }
@@ -53,7 +60,7 @@ class CartController extends Controller
     public function addHalf(Request $request){
         $id = $request->id;
         $hIdx = $request->hIdx;
-        $userId = $this->decrypt($_COOKIE['tempId']);
+        $userId = $this->getUserId();
         $data = cart::where(array('userid'=>$userId,'product'=>$id))->first();
         $objs = new cart();
         if(!empty($data)):
@@ -76,15 +83,18 @@ class CartController extends Controller
                 $cartData = cart::where('userId',$userId)->get();
                 $bundle = $userId.'-'.rand(10,100);
                 foreach($cartData as $c){
-                    $orderObj = new order();
-                    $orderObj['userid']      = $userId;
-                    $orderObj['product']     = $c->product;
-                    $orderObj['count']       = $c->count;
-                    $orderObj['isHalf']      = $c->isHalf;
-                    $orderObj['bundle']      = $bundle;
-                    $orderObj['mode']        = 'COD';
-                    $orderObj['status']      = 'Processing';
-                    $orderObj->save();
+                    if($c->count > 0){
+                        $orderObj = new order();
+                        $orderObj['userid']      = $userId;
+                        $orderObj['product']     = $c->product;
+                        $orderObj['count']       = $c->count;
+                        $orderObj['isHalf']      = $c->isHalf;
+                        $orderObj['bundle']      = $bundle;
+                        $orderObj['mode']        = 'COD';
+                        $orderObj['status']      = 'Processing';
+                        $orderObj->save();
+                    }
+                    
                 }
                 cart::where('userid',$userId)->delete();
                 setcookie('placeOrder','', time() + (60 * 30), "/");

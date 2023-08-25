@@ -36,7 +36,7 @@
                         <div class="card-header">
                             <div class="card-tools">
                                 <button style="font-size: 10px;font-weight: 700;" type="button" class="btn btn-tool " data-card-widget="collapse">
-                                    <span class="text-danger"><i class="fas fa-pin"></i><b>{{$d->deliveryArea}}</b></span><span > {{date('d M, Y  h:i a',strtotime($d->created_at))}}</span> <span class="badge badge-danger badge-plus"><i class="fas fa-plus"></i></span>
+                                    <span class="text-danger"><i class="fas fa-pin"></i><b>{{$d->username}} ( {{$d->deliveryArea}} ) </b></span><span > {{date('d M, Y  h:i a',strtotime($d->created_at))}}</span> <span class="badge badge-danger badge-plus"><i class="fas fa-plus"></i></span>
                                     
                                 </button>
                                 
@@ -124,7 +124,7 @@
                                         </div>
                                         @if($d->status != 'Completed')
                                         <div class="time-label">
-                                            <span class="bg-green">Expected : 30min</span>
+                                            <span class="bg-green">Expected : 45min</span>
                                         </div>
                                         @endif
                                         <div>

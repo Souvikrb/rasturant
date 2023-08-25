@@ -13,7 +13,7 @@ class frontend_footer extends Component
      */
     public function __construct()
     {
-        //
+       
     }
 
     /**
@@ -23,6 +23,7 @@ class frontend_footer extends Component
      */
     public function render()
     {
+        
         return view('components.frontend-footer');
     }
 }

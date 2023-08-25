@@ -7,7 +7,7 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        <div class="row" id="sales_data">
+        <div class="row" >
           <div class="col-md-12">
             <div class="card card-primary">
               <div class="card-header">
@@ -37,11 +37,11 @@
                                     <td >{{$i}}</td>
                                     <td ><img class="badge-image" src="{{asset('storage/products/'.$d->prodImg)}}"></td>
                                     <td >{{$d->product}} <br> <small class="text-danger">{{$d->tags}}</small></td>
-                                    <td>{{($d->rgPrice == '')?'----':$d->rgPrice}}</td>
+                                    <td>{{($d->slPrice == '')?'----':$d->slPrice}}</td>
                                     
                                     <td>{{$d->type}}</td>
                                     <td>{{$d->status}}</td>
-                                    <td><div class="btn-group btn-group-sm"><button  data-sId="{{$d->id}}"  class="btn btn-primary editicon"><i class="fas fa-pen"></i></button><a href="{{url('delete-product/'.$d->id)}}" data-sId="{{$d->id}}"  class="btn btn-danger delicon"><i class="fas fa-trash"></i></a></div></td>
+                                    <td><div class="btn-group btn-group-sm "><a  href="{{url('/admin/products/edit/'.$d->id)}}"  data-sId="{{$d->id}}"  class="btn btn-primary editicon btn-rounded"><i class="fas fa-pen"></i></a></div></td>
                                 </tr>
                                 @endforeach
                             @endif

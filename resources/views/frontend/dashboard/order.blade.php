@@ -3,12 +3,26 @@
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper ">
 
-
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Orders</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item "><a href="#" class="text-danger">Home</a></li>
+              <li class="breadcrumb-item active">Your Orders</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
+            @if($data->count() != 0)
             <div class="row" id="sales_data">
-                @if($data->count() != 0)
                 @foreach($data as $d)
                    <?php
                     $color = 'danger';
@@ -186,8 +200,17 @@
                     <!--/.direct-chat -->
                 </div>
                 @endforeach
-                @endif
             </div>
+            @else
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <img style="width: 350px;" src="{{asset('dist/img/notfound.png')}}">
+                        <h2>No Order Found</h2>
+                        <p>Looks like you haven't made your order yet</p>
+                        <a href="{{url('/')}}" class="btn btn-primary">Back to Menu</a>
+                    </div>
+                </div>
+            @endif
         </div>
     </section>
     <!-- /.content -->

@@ -25,11 +25,13 @@ class AdminHeader extends Component
      */
     public function render()
     {
-        if(Session::has('adminId')){
-            $role ='1';
-        }else{
+
+        if(Session::has('userId')){
             $role ='2';
+        }else{
+            $role ='1';
         }
+        $slug = request()->segment(count(request()->segments()));
         $menu    = Menu::where(array('status'=>'1','role'=>$role))->get();
         $mainmenu = array();
         foreach($menu as $m){
@@ -40,6 +42,6 @@ class AdminHeader extends Component
             }
             $mainmenu[] = array('icon'=>$m->icon,'label'=>$m->label,'link'=>$m->link,'submenu'=>$sm);
         }
-        return view('components.admin-header')->with(array('menu'=>$mainmenu));
+        return view('components.admin-header')->with(array('menu'=>$mainmenu,'slug'=>$slug));
     }
 }

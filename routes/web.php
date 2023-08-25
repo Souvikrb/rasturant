@@ -45,6 +45,12 @@ Route::get('/order/submit',  [CartController::class,'orderSubmit'])->name('/orde
 /* Administrator route list =======================================================*/
 Route::middleware([UserAuthentication::class])->group(function () {
     Route::get('/user/order',[UserController::class,'order'])->name('/user/order');
+
+
+    //All Profile route
+    Route::get('/user/profile',[UserController::class,'profile'])->name('/user/profile');
+    Route::post('/user/update',[UserController::class,'user_update'])->name('/user/update');
+    /* -------------------------------------------------------------------------------*/
 });
 
 /* ================================================================================*/
@@ -54,6 +60,8 @@ Route::middleware([UserAuthentication::class])->group(function () {
 Route::get('admin/login',[AdministratorController::class,'login'])->name('/admin/login');
 Route::post('admin/login/save',[AdministratorController::class,'login_save'])->name('/admin/login/save');
 
+Route::get('/admin/logout', [AdministratorController::class,'logout'])->name('/admin/logout');
+
 Route::middleware([AdminAuthentication::class])->group(function () {
     Route::get('administrator',[AdministratorController::class,'index'])->name('/administrator');
 
@@ -62,10 +70,16 @@ Route::middleware([AdminAuthentication::class])->group(function () {
     Route::post('admin/order/updateOrderStatus',[OrderController::class,'updateOrderStatus'])->name('/admin/order/updateOrderStatus');
     /* -------------------------------------------------------------------------------*/
 
+    
+
+
+
     //All product route
     Route::get('/admin/products',[ProductController::class,'index'])->name("/admin/products");
     Route::get('/admin/products/add',[ProductController::class,'create'])->name('/admin/products/add');
     Route::post('/admin/products/store',[ProductController::class,'store'])->name('/admin/products/store');
+    Route::get('/admin/products/edit/{id}',[ProductController::class,'edit'])->name('/admin/products/edit/');
+    Route::post('/admin/products/update',[ProductController::class,'update'])->name('/admin/products/update');
     Route::prefix('product')->group(function () {
         Route::get('delete/{id}',[ProductController::class,'destroy'])->name("/admin/deleteProduct");
     });
